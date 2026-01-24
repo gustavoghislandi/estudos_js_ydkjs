@@ -75,56 +75,99 @@ But occasionally, TC39 will decide the specification should stick firm on some p
 
 /*"Section B.3 includes some conflicts where code may run in both web and non-web JS engines, but where the behavior could be observably different, resulting in different outcomes. Most of the listed changes involve situations that are labeled as early errors when code is running in strict mode."*/
 
-/**/
+/*"Appendix B gotchas aren't encountered very often, but it's still a good idea to avoid these constructs to be future safe. Wherever possible, adhere to the JS specification and don't rely on behavior that's only applicable in certain JS engine environments.
+"*/
 
-/**/
-/**/
+/*
+Estou de cara com isso aqui...
 
-/**/
+Is this code a JS program?
 
-/**/
+alert("Hello, JS!");
 
-/**/
+Depends on how you look at things. The alert(..) function shown here is not included in the JS specification, but it is in all web JS environments. Yet, you won't find it in Appendix B, so what gives?
 
-/**/
+Various JS environments (like browser JS engines, Node.js, etc.) add APIs into the global scope of your JS programs that give you environment-specific capabilities, like being able to pop an alert-style box in the user's browser.
 
-/**/
+In fact, a wide range of JS-looking APIs, like fetch(..), getCurrentLocation(..), and getUserMedia(..), are all web APIs that look like JS. In Node.js, we can access hundreds of API methods from various built-in modules, like fs.write(..).
 
-/**/
+Another common example is console.log(..) (and all the other console.* methods!). These are not specified in JS, but because of their universal utility are defined by pretty much every JS environment, according to a roughly agreed consensus.
 
-/**/
+So alert(..) and console.log(..) are not defined by JS. But they look like JS. They are functions and object methods and they obey JS syntax rules. The behaviors behind them are controlled by the environment running the JS engine, but on the surface they definitely have to abide by JS to be able to play in the JS playground.
 
-/**/
+Most of the cross-browser differences people complain about with "JS is so inconsistent!" claims are actually due to differences in how those environment behaviors work, not in how the JS itself works.
 
-/**/
+So an alert(..) call is JS, but alert itself is really just a guest, not part of the official JS specification."
+*/
 
-/**/
+/*"The term "paradigm" in programming language context refers to a broad (almost universal) mindset and approach to structuring code. "*/
 
-/**/
-/**/
+/*Paradigmas comuns: Procedural (ou Procedimental ou Processual), Orientado a Objetos (paradigma de classes) e Funcional.*/
 
-/**/
+/*Procedural é de cima para baixo, com operações que quando são agrupadas são chamadas de procedimentos. */
 
-/**/
+/*OO organiza o código coletando lógica e dados juntos em unidades chamadas classes [as classes são a fôrma dos objetos, será que não seria mais certo falar de usar objetos? Porque eu posso criar objetos sem classes. Enfim, as OO baseadas em classes são as OO clássicas (as famosas), Java, C++, C#].
 
-/**/
+ChatGPT: OO não exige classes; exige objetos. Classes são uma estratégia, não uma regra.
+*/
 
-/**/
+/*Funcional:
+ChatGPT:
 
-/**/
+    Em programação funcional, funções são valores de primeira classe:
 
-/**/
+        podem ser passadas como argumentos,
+        retornadas por outras funções,
+        armazenadas em variáveis.
 
-/**/
+    Você passa “o que fazer” junto com os dados. Esse é um dos pilares do estilo funcional.
+*/
 
-/**/
+/*"Paradigms are neither right nor wrong. They're orientations that guide and mold how programmers approach problems and solutions, how they structure and maintain their code."*/
 
-/**/
+/*"Some languages are heavily slanted toward one paradigm—C is procedural, Java/C++ are almost entirely class oriented, and Haskell is FP through and through."*/
 
-/**/
+/*Muitas linguagens são multi-paradigma.*/
 
-/**/
-/**/
+/*JavaScript é multi-paradigma. Você pode escrever código Procedural, OO ou Funcional, misturando, linha por linha, sem ser forçado a um dos paradigmas.*/
+
+// BACKWARDS COMPATIBILITY
+
+/*"One of the most foundational principles that guides JavaScript is preservation of backwards compatibility. "*/
+
+/*"Backwards compatibility means that once something is accepted as valid JS, there will not be a future change to the language that causes that code to become invalid JS"*/
+
+/*Isso significa que ódigo escrito em 1995, não importando se limitado ou primitivo, ainda deve funcionar hoje em dia.*/
+
+/*"As TC39 members often proclaim, 'we don't break the web!'"*/
+
+/*"The idea is that JS developers can write code with confidence that their code won't stop working unpredictably because a browser update is released. This makes the decision to choose JS for a program a more wise and safe investment, for years into the future."*/
+
+/*Dificilmente se encontrará em computação tamanho esforço pela retrocompatibilidade.*/
+
+/*"The costs of sticking to this principle should not be casually dismissed. It necessarily creates a very high bar to including changing or extending the language; any decision becomes effectively permanent, mistakes and all. Once it's in JS, it can't be taken out because it might break programs, even if we'd really, really like to remove it!"*/
+
+// HÁ EXCEÇÕES
+
+/*"There are some small exceptions to this rule. JS has had some backwards-incompatible changes, but TC39 is extremely cautious in doing so. They study existing code on the web (via browser data gathering) to estimate the impact of such breakage, and browsers ultimately decide and vote on whether they're willing to take the heat from users for a very small-scale breakage weighed against the benefits of fixing or improving some aspect of the language for many more sites (and users)."*/
+
+/*Conforme o parágrafo acima, há pequenas exceções, em que se coleta dados da internet e tenta-se estimar o impacto de custo-benefício, sem quebrar a internet, óbvio, para fazer aquela pequena correção ou melhoria. Mas é algo raro, coisa que não afetaria muitos sites [não sei qual o juízo que fazem].*/
+
+// FORWARDS COMPATIBILITY (WHICH JS IS NOT)
+
+/*"Compare backwards compatibility to its counterpart, forwards compatibility. Being forwards-compatible means that including a new addition to the language in a program would not cause that program to break if it were run in an older JS engine. JS is not forwards-compatible, despite many wishing such, and even incorrectly believing the myth that it is."*/
+
+/*JavaScript não é compatível com versões futura. O motor roda programas antigos (retrocompatibilidade), mas motores antigos não rodam programas futuros (compatibilidade futura).*/
+
+/*"HTML and CSS, by contrast, are forwards-compatible but not backwards-compatible. If you dug up some HTML or CSS written back in 1995, it's entirely possible it would not work (or work the same) today. But, if you use a new feature from 2019 in a browser from 2010, the page isn't "broken" -- the unrecognized CSS/HTML is skipped over, while the rest of the CSS/HTML would be processed accordingly." [Digamos que é uma compatibilidade futura, mas nem tanto. A menos que consideremos isso a partir de HTML5 e CSS3. Aí faz mais sentido.]*/
+
+/*"It may seem desirable for forwards-compatibility to be included in programming language design, but it's generally impractical to do so. Markup (HTML) or styling (CSS) are declarative in nature, so it's much easier to "skip over" unrecognized declarations with minimal impact to other recognized declarations."*/
+
+/*Ou seja, em linguagens declarativas é mais fácil fazer compatibilidade futura. Enquanto fica menos difícil fazer retrocompatibilidade em linguagem imperativa.*/
+
+/*"But chaos and non-determinism would ensue if a programming language engine selectively skipped statements (or even expressions!) that it didn't understand, as it's impossible to ensure that a subsequent part of the program wasn't expecting the skipped-over part to have been processed."*/
+
+/*"Though JS isn't, and can't be, forwards-compatible, it's critical to recognize JS's backwards compatibility, including the enduring benefits to the web and the constraints and difficulties it places on JS as a result."*/
 
 /**/
 
