@@ -1,5 +1,7 @@
 # Síntese rápida
 
+- Em JS, praticamente tudo que foi criado no passado, roda na Engine de hoje. Mas o que foi criado hoje, para rodar no passado, precisa de um transpilador, como o Babel.
+
 ## BACKWARDS COMPATIBILITY (Retrocompatibilidade)
 
 - Um motor futuro consegue rodar código antigo.
@@ -30,3 +32,5 @@
 | HTML / CSS            | Interpretada por browser                     | ✅ Navegadores modernos interpretam páginas antigas | ✅ Navegadores antigos ignoram tags/propriedades desconhecidas   | Funciona bem como exemplo de forward compatibility tolerante; motor interpreta o que conhece e ignora o resto.                 |
 | C (compilada)         | Compilada                                    | ✅ Compiladores novos compilam código antigo        | ❌ Compiladores antigos não compilam código novo                 | Forward falha porque o compilador precisa conhecer toda a sintaxe/regras antes de gerar código.                                |
 | SQL (declarativa)     | Interpretada / engine de query               | ✅ Engines modernas processam queries antigas       | ❌ Engines antigas podem não suportar funções ou cláusulas novas | Forward falha se o engine não conhece recursos novos, mas backward funciona porque queries antigas ainda são válidas.          |
+
+

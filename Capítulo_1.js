@@ -169,6 +169,153 @@ ChatGPT:
 
 /*"Though JS isn't, and can't be, forwards-compatible, it's critical to recognize JS's backwards compatibility, including the enduring benefits to the web and the constraints and difficulties it places on JS as a result."*/
 
+/*"Since JS is not forwards-compatible, it means that there is always the potential for a gap between code that you can write that's valid JS, and the oldest engine that your site or application needs to support. If you run a program that uses an ES2019 feature in an engine from 2016, you're very likely to see the program break and crash."*/
+
+/*"If the feature is a new syntax, the program will in general completely fail to compile and run, usually throwing a syntax error. If the feature is an API (such as ES6's Object.is(..)), the program may run up to a point but then throw a runtime exception and stop once it encounters the reference to the unknown API.
+
+Does this mean JS developers should always lag behind the pace of progress, using only code that is on the trailing edge of the oldest JS engine environments they need to support? No!
+
+But it does mean that JS developers need to take special care to address this gap."*/
+
+/*"For new and incompatible syntax, the solution is transpiling. Transpiling is a contrived and community-invented term to describe using a tool to convert the source code of a program from one form to another (but still as textual source code). Typically, forwards-compatibility problems related to syntax are solved by using a transpiler (the most common one being Babel (https://babeljs.io)) to convert from that newer JS syntax version to an equivalent older syntax."*/
+
+/*"For example, a developer may write a snippet of code like:*/
+
+if (something) {
+    let x = 3;
+    console.log(x);
+}
+else {
+    let x = 4;
+    console.log(x);
+}
+
+/*
+"This is how the code would look in the source code tree for that application. But when producing the file(s) to deploy to the public website, the Babel transpiler might convert that code to look like this:""
+*/
+
+var x$0, x$1;
+if (something) {
+    x$0 = 3;
+    console.log(x$0);
+}
+else {
+    x$1 = 4;
+    console.log(x$1);
+}
+
+/*"The original snippet relied on let to create block-scoped x variables in both the if and else clauses which did not interfere with each other. An equivalent program (with minimal re-working) that Babel can produce just chooses to name two different variables with unique names, producing the same non-interference outcome."*/
+
+// Em JS antigo (ES5), não existe escopo de bloco, só escopo de função (var).
+// O $ é só um caractere válido em nomes de variáveis JS, e Babel usa ele como marcador interno para gerar nomes únicos sem risco de colisão.
+
+/*
+ChatGPT:
+
+x → nome original
+
+$0, $1 → sufixos gerados automaticamente
+
+$ é escolhido porque:
+    é válido em JS
+    quase ninguém usa $0 manualmente
+    reduz chance de conflito
+    é fácil para o compilador identificar
+
+Por que não x1, x2?
+
+    Poderia, mas:
+        x1 é comum em código humano
+        maior chance de colisão
+        $ funciona como "isso foi gerado pelo compilador"
+*/
+
+/*
+Os engines antigos geralmente estão em:
+
+1. Browsers antigos (o caso clássico)
+        Exemplos:
+            Internet Explorer 11 (não suporta let direito)
+            IE10, IE9, etc.
+            Browsers antigos de Android
+            Browsers embutidos em TVs, consoles, carros, etc.
+
+Se o seu site precisava rodar nesses ambientes, Babel era essencial.
+
+2. Ambientes corporativos “congelados”
+
+    Muito comum em empresas grandes:
+
+        Máquinas presas a:
+            Windows antigo
+            IE11
+            versões antigas de Chrome/Edge
+            Sistemas internos que não podem atualizar o browser
+
+Esses ambientes ainda existiam bastante até ~2020 (e alguns ainda hoje).
+
+3. Engines JS fora do browser
+
+    Não é só browser que roda JS:
+
+        Node.js antigo
+            Ex: Node 6, 8, 10
+        Engines embutidas
+        Electron antigo
+        WebViews antigos
+        Sistemas embarcados
+
+Se o runtime for antigo, ele também não entende ES6+.*/
+
+/*"You may wonder: why go to the trouble of using a tool to convert from a newer syntax version to an older one? Couldn't we just write the two variables and skip using the let keyword? The reason is, it's strongly recommended that developers use the latest version of JS so that their code is clean and communicates its ideas most effectively."*/
+
+/*Como dito acima, é fortemente recomendado usar a última versão de JavaScript (acho que ele se refere ao ES6, que foi uma grande mudança), para que o código fique mais limpo e os devs comuniquem ideias (via código) de maneira mais efetiva.
+
+Os devs tem que se preocupar em escrever código limpo. As forward-compatibility devem ser gerenciadas pelas ferramentas, não pelos devs.
+*/
+
+/*Um exemplo de compatibilidade relatado no livro, que precisa de polyfill é a propriedade 'finally' da Promise, que só foi incluída no ES2019.
+
+E aí ele fala que, ao usar o 'if (!Promise.prototype.finally)', isso faz com que em ambientes antigos isso seja adicionado, e nos novos isso seja sutilmente pulado ("quietly skipped").
+*/
+
+// "Transpilers like Babel typically detect which polyfills your code needs and provide them automatically for you. But occasionally you may need to include/define them explicitly".
+
+/*"Always write code using the most appropriate features to communicate its ideas and intent effectively. In general, this means using the most recent stable JS version. Avoid negatively impacting the code's readability by trying to manually adjust for the syntax/API gaps. That's what tools are for!"
+
+Ou seja (traduzido):
+
+IMPORTANTE:
+Sempre escreva o código utilizando os recursos mais apropriados para comunicar suas ideias e intenções de forma eficaz. Em geral, isso significa usar a versão estável mais recente do JavaScript. Evite prejudicar a legibilidade do código tentando ajustar manualmente as lacunas de sintaxe/API. Para isso que existem ferramentas!
+
+*/
+
+/*"Transpilation and polyfilling are two highly effective techniques for addressing that gap between code that uses the latest stable features in the language and the old environments a site or application needs to still support. Since JS isn't going to stop improving, the gap will never go away. Both techniques should be embraced as a standard part of every JS project's production chain going forward.
+"
+
+Basicamente, transpilação e polipreenchimento sempre irão existir, porque o JS provavelmente sempre irá evoluir. 
+
+Então, ambas as técnicas devem ser acolhidas como protocolo padrão da cadeia de produção de projetos JS.
+*/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
 /**/
 
 /**/
@@ -190,3 +337,336 @@ ChatGPT:
 /**/
 
 /**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
+/**/
+
