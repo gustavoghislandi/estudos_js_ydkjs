@@ -409,367 +409,110 @@ And again, the reason that matters is, since JS is compiled, we are informed of 
 
 "*/
 
-/**/
+// Web Assembly (WASM)
 
-/**/
+/*Desempenho sempre foi uma preocupação com JS.
 
-/**/
+Em 2013, engenheiros da Mozilla Firefox fizeram uma adaptação do motor de jogo do jogo Unreal 3, de C para JS. Rodou a 60fps. Isso funcionou porque o código do motor do Unreal usava um estilo de código que favorecia um subconjunto da linguagem JS, nomeado de 'ASM.js'.
 
-/**/
+Isso era uma das maneiras de tentar melhorar a performance do Runtime do JS.
 
-/**/
+Nunca foi intenção que os devs codassem assim, isso é um ferramental, a ideia era colocar como ferramental de transpilação para melhorar desempenho.
 
-/**/
+Anos depois, outro grupo de engenheiros, inicialmente da Mozilla, lançaram o Web Assembly (WASM).
+*/
 
-/**/
+/*"WASM is similar to ASM.js in that its original intent was to provide a path for non-JS programs (C, etc.) to be converted to a form that could run in the JS engine. Unlike ASM.js, WASM chose to additionally get around some of the inherent delays in JS parsing/compilation before a program can execute, by representing the program in a form that is entirely unlike JS."*/
 
-/**/
+/*"WASM is a representation format more akin to Assembly (hence, its name) that can be processed by a JS engine by skipping the parsing/compilation that the JS engine normally does. The parsing/compilation of a WASM-targeted program happen ahead of time (AOT); what's distributed is a binary-packed program ready for the JS engine to execute with very minimal processing."*/
 
-/**/
+/*"WASM is additionally motivated by the desire to bring more parity for non-JS languages to the web platform. For example, if a language like Go supports threaded programming, but JS (the language) does not, WASM offers the potential for such a Go program to be converted to a form the JS engine can understand, without needing a threads feature in the JS language itself."*/
 
-/**/
+/*"In other words, WASM relieves the pressure to add features to JS that are mostly/exclusively intended to be used by transpiled programs from other languages. That means JS feature development can be judged (by TC39) without being skewed by interests/demands in other language ecosystems, while still letting those languages have a viable path onto the web."*/
 
-/**/
+// O WASM está evoluindo para se tornar semelhante a uma VM, que onde os programamas compilados poderiam rodar em diversos ambientes.
 
-/**/
+/*"WASM is evolving to become a cross-platform virtual machine (VM) of sorts, where programs can be compiled once and run in a variety of different system environments."*/
 
-/**/
+// Olha que interessante, o WASM não roda em JS porque precisa de linguagem de tipagem estática, mas mesmo o TS não serve para os propósitos. A variante de JS, AssemblyScript, está tentando ocupar esse lugar:
 
-/**/
+/*"So, WASM isn't only for the web, and WASM also isn't JS. Ironically, even though WASM runs in the JS engine, the JS language is one of the least suitable languages to source WASM programs with, because WASM relies heavily on static typing information. Even TypeScript (TS)—ostensibly, JS + static types—is not quite suitable (as it stands) to transpile to WASM, though language variants like AssemblyScript are attempting to bridge the gap between JS/TS and WASM."*/
 
-/**/
+/*"This book isn't about WASM, so I won't spend much more time discussing it, except to make one final point. Some folks have suggested WASM points to a future where JS is excised from, or minimized in, the web. These folks often harbor ill feelings about JS, and want some other language—any other language!—to replace it. Since WASM lets other languages run in the JS engine, on its face this isn't an entirely fanciful fairytale.
 
-/**/
+But let me just state simply: WASM will not replace JS. WASM significantly augments what the web (including JS) can accomplish. That's a great thing, entirely orthogonal to whether some people will use it as an escape hatch from having to write JS.
+#
+"*/
 
-/**/
+// WASM não veio para substituir o JavaScript, mas para expandir o que a web pode fazer junto com ele.
+// Ele permite usar outras linguagens por performance ou necessidade, sem tirar o JS do centro da web.
 
-/**/
+// Strict-mode
 
-/**/
+// A ideia é ter um guia para uma forma de codar que vise o melhor desempenho de otimização ao rodar o código JS. Não para restringir o que pode ser feito.
 
-/**/
+/*"Most strict mode controls are in the form of early errors, meaning errors that aren't strictly syntax errors but are still thrown at compile time (before the code is run). For example, strict mode disallows naming two function parameters the same, and results in an early error. Some other strict mode controls are only observable at runtime, such as how this defaults to undefined instead of the global object."*/
 
-/**/
+/*"strict mode is like a linter reminding you how JS should be written to have the highest quality and best chance at performance."*/
 
-/**/
+/*" If you find yourself feeling handcuffed, trying to work around strict mode, that should be a blaring red warning flag that you need to back up and rethink the whole approach"*/
 
-/**/
+// Maneira de entrar no modo estrito:
 
-/**/
+/*
 
-/**/
+"Strict mode is switched on per file with a special pragma (nothing allowed before it except comments/whitespace):"
 
-/**/
+    // only whitespace and comments are allowed
+    // before the use-strict pragma
+    "use strict";
+    // the rest of the file runs in strict mode
 
-/**/
 
-/**/
+*/
 
-/**/
+/*"WARNING:
+Something to be aware of is that even a stray ; all by itself appearing before the strict mode pragma will render the pragma useless; no errors are thrown because it's valid JS to have a string literal expression in a statement position, but it also will silently not turn on strict mode!"*/
 
-/**/
+// Também é possível colocar o modo estrito em escopo de função:
 
-/**/
+/*Strict mode can alternatively be turned on per-function scope, with exactly the same rules about its surroundings:
 
-/**/
+function someOperations() {
+    // whitespace and comments are fine here
+    "use strict";
 
-/**/
+    // all this code will run in strict mode
+}
+*/
 
-/**/
+/*"Interestingly, if a file has strict mode turned on, the function-level strict mode pragmas are disallowed. So you have to pick one or the other."*/
 
-/**/
+// Ou seja, você precisa escolher um modo estrito no arquivo ou no escopo de função.
 
-/**/
+/*"The only valid reason to use a per-function approach to strict mode is when you are converting an existing non-strict mode program file and need to make the changes little by little over time. Otherwise, it's vastly better to simply turn strict mode on for the entire file/program."*/
 
-/**/
+/*"Many have wondered if there would ever be a time when JS made strict mode the default? The answer is, almost certainly not. As we discussed earlier around backwards compatibility, if a JS engine update started assuming code was strict mode even if it's not marked as such, it's possible that this code would break as a result of strict mode's controls."*/
 
-/**/
+// Por conta da backwards compatibility, modo strito provavelmente nunca será o padrão.
 
-/**/
+// Entretanto, todo código transpilado acaba ficando em modo estrito.
 
-/**/
+/*"Moreover, a wide shift is happening toward more/most new JS code being written using the ES6 module format. ES6 modules assume strict mode, so all code in such files is automatically defaulted to strict mode."*/
 
-/**/
+// Acaba, então, que o modo estrito é o padrão de fato, apesar de tecnicamente não ser o padrão oficial.
 
-/**/
+/*RESUMO DO CAPÍTULO 1 [Traduzido pelo Google Tradutor]:
 
-/**/
+JavaScript é uma implementação do padrão ECMAScript (versão ES2019 na data desta publicação), que é guiado pelo comitê TC39 e hospedado pela ECMA. Ele roda em navegadores e outros ambientes JavaScript, como o Node.js.
 
-/**/
+JavaScript é uma linguagem multiparadigma, o que significa que sua sintaxe e recursos permitem que um desenvolvedor combine (e adapte!) conceitos de vários paradigmas principais, como procedural, orientado a objetos (OO/classes) e funcional (FP).
 
-/**/
+JavaScript é uma linguagem compilada, o que significa que as ferramentas (incluindo o mecanismo JavaScript) processam e verificam um programa (relatando quaisquer erros!) antes de sua execução.
 
-/**/
+Com nossa linguagem agora definida, vamos começar a conhecer seus detalhes.
 
-/**/
+[^specApB]: Especificação da Linguagem ECMAScript 2019, Apêndice B: Recursos Adicionais do ECMAScript para Navegadores Web, https://www.ecma-international.org/ecma-262/10.0/#sec-additional-ecmascript-features-for-web-browsers (versão mais recente até a data desta publicação, janeiro de 2020)
+*/
 
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
-/**/
-
+// A parte da compilação pode ser questionada, sendo o JS uma linguagem interpretada porque compilada implicaria que o executável rodasse em qualquer outro motor, mas não, ele não é 'transportável' nesse sentido, como visto acima e outros arquivos que escrevi aqui como em Java_compilado_&_JS_interpretado.js
