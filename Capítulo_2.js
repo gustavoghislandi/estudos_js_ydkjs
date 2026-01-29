@@ -146,3 +146,93 @@ Observações rápidas:
 
 
 // Declarando e Usando Variáveis
+
+// Valores podem aparecer de forma literal ou em variáveis.
+
+// Falou de var, let... e agora const, que tem que receber um valor quando é declarada e não pode ter o valor alterado [é de referência, por que objetos podem ser alterados].
+
+// O autor não recomenda usar const pra objetos porque:
+
+    const actors = [
+        "Morgan Freeman", "Jennifer Aniston"
+    ];
+
+    actors[2] = "Tom Cruise";   // OK :(
+    actors = [];                // Error!
+
+    // Se fosse let (ou var) actors receberia o novo valor.
+
+// É engraçado isso, porque em React, a recomendação é justamente usar const para os objetos.
+
+// Do ponto de vista do autor:
+    //Se você usar 'const' apenas com valores primitivos, evita qualquer confusão entre reatribuição (não permitida) e mutação (permitida)! Essa é a maneira mais segura e recomendada de usar 'const'.
+
+//-----
+
+    function hello(myName) {
+        console.log(`Hello, ${ myName }.`);
+    }
+
+    hello("Kyle");
+    // Hello, Kyle.
+
+// "The identifier hello is created in the outer scope, and it's also automatically associated so that it references the function. But the named parameter myName is created only inside the function, and thus is only accessible inside that function's scope. hello and myName generally behave as var-declared."
+
+//---
+
+// "Another syntax that declares a variable is a catch clause:"
+
+    try {
+        someError();
+    }
+    catch (err) {
+        console.log(err);
+    }
+
+// "The 'err' is a block-scoped variable that exists only inside the catch clause, as if it had been declared with let."
+
+// Funções
+
+// The word "function" has a variety of meanings in programming. For example, in the world of Functional Programming, "function" has a precise mathematical definition and implies a strict set of rules to abide by.
+
+// In JS, we should consider "function" to take the broader meaning of another related term: "procedure." A procedure is a collection of statements that can be invoked one or more times, may be provided some inputs, and may give back one or more outputs. [De maneira diferente, eu aprendi que procedimentos não retornam nada, já funções retornam um valor. ChatGPT disse que eu aprendi a definição clássica (correta conceitualmente).]
+
+// Em JS toda function sempre retorna algo, nem que seja undefined.
+
+//---
+
+    function awesomeFunction(coolThings) {
+        // ..
+        return amazingStuff;
+    }
+
+// "This is called a function declaration because it appears as a statement by itself, not as an expression in another statement. The association between the identifier 'awesomeFunction' and the function value happens during the compile phase of the code, before that code is executed."
+
+// O nome 'awesomeFunction' é ligado à função antes do código rodar (fase de compilação).
+// Por isso ela pode ser chamada antes de aparecer no arquivo.
+// Isso é o famoso hoisting de funções.
+
+// "JS functions are a special type of the object value type. Not all languages treat functions as values, but it's essential for a language to support the functional programming pattern, as JS does."
+
+// Parâmetros agem como variáveis locais dentro da função.
+
+// "You can only return a single value, but if you have more values to return, you can wrap them up into a single object/array."
+
+// "Since functions are values, they can be assigned as properties on objects:"
+
+    var whatToSay = {
+        greeting() {
+            console.log("Hello!");
+        },
+        question() {
+            console.log("What's your name?");
+        },
+        answer() {
+            console.log("My name is Kyle.");
+        }
+    };
+
+    whatToSay.greeting();
+    // Hello!
+
+// Comparações
