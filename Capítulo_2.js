@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // A melhor maneira de aprender JS é começar a escrever JS.
 
 // Para fazer isso, você precisa saber como a linguagem funciona. O que será o foco aqui.
@@ -236,3 +238,197 @@ Observações rápidas:
     // Hello!
 
 // Comparações
+
+//Equality and Equivalence
+
+    // The "triple-equals" === operator, also described as the "strict equality" operator. Or... not exactly.
+
+    3 === 3.0;              // true
+    "yes" === "yes";        // true
+    null === null;          // true
+    false === false;        // true
+
+    42 === "42";            // false
+    "hello" === "Hello";    // false
+    true === 1;             // false
+    0 === null;             // false
+    "" === null;            // false
+    null === undefined;     // false
+
+
+// Another way ==='s equality comparison is often described is, "checking both the value and the type".
+
+// Igualdade tripla checa tanto 'valor' quanto 'tipo'.
+
+// Mas, em verdade 
+
+// "All value comparisons in JS consider the type of the values being compared, not just the === operator. Specifically, === disallows any sort of type conversion (aka, "coercion") in its comparison, where other JS comparisons do allow coercion."
+
+// Ou seja, TODAS as comparações em JS checam tipo. A diferença é que na tripla a'COERÇÃO' é desabilitada. Enquanto nas outras comparações elas são habilitadas.
+
+// O operador === foi projetado para "mentir" em dois valores especiais: 'NaN' e '-0'. Considere:
+
+    NaN === NaN;            // false
+    0 === -0;               // true
+
+/*In the case of NaN, the === operator lies and says that an occurrence of NaN is not equal to another NaN. In the case of -0 (yes, this is a real, distinct value you can use intentionally in your programs!), the === operator lies and says it's equal to the regular 0 value.*/
+
+// Para esses dois casos use:
+
+    Number.isNan()
+
+    // e para o -0, use
+
+    Object.is() // Este também pode ser usado para checar NaN.
+
+    // Ambos não "mentem"
+
+// É como se o  Object.is(...) fosse o "quadruple-equals" ====, "the really-really-strict comparison!"
+
+
+/* "There are deeper historical and technical reasons for these lies, but that doesn't change the fact that === is not actually strictly exactly equal comparison, in the strictest sense.
+
+The story gets even more complicated when we consider comparisons of object values (non-primitives). Consider:"
+*/
+
+    [ 1, 2, 3 ] === [ 1, 2, 3 ];    // false
+    // { a: 42 } === { a: 42 };         // false
+    (x => x * 2) === (x => x * 2);   // false
+
+/* "What's going on here?
+
+It may seem reasonable to assume that an equality check considers the nature or contents of the value; after all, 42 === 42 considers the actual 42 value and compares it. But when it comes to objects, a content-aware comparison is generally referred to as "structural equality."
+
+JS does not define === as structural equality for object values. Instead, === uses identity equality for object values."*/
+
+// JS não define === como igualdade estrutural, mas como como igualdade de identidade. 
+// Ou seja, PARA OBJETOS, o === checa IGUALDADE DE REFERÊNCIA. Eles têm que ser a mesma instância na memória.
+
+// Em JavaScript, todos os valores de objetos são mantidos por referência (veja "Valores vs. Referências" no Apêndice A),
+// são atribuídos e passados ​​por cópia de referência e,
+// para a nossa discussão atual, são comparados por igualdade de referência (identidade). [Traduzido via Google Tradutor]
+// Considere:
+
+    var x = [ 1, 2, 3 ];
+
+    // A atribuição é feita por cópia por referência, então
+    // y referencia o *mesmo* array que x,
+    // não outra cópia dele.
+    var y = x;
+
+    y === x;              // true
+    y === [ 1, 2, 3 ];    // false
+    x === [ 1, 2, 3 ];    // false
+
+/*
+"In this snippet, y === x is true because both variables hold a reference to the same initial array. But the === [1,2,3] comparisons both fail because y and x, respectively, are being compared to new different arrays [1,2,3]. The array structure and contents don't matter in this comparison, only the reference identity"
+*/
+
+// O JavaScript não fornece um mecanismo para comparação de igualdade estrutural de valores de objetos, apenas comparação de identidade de referência. Para realizar a comparação de igualdade estrutural, você precisará implementar as verificações por conta própria. [Traduzido via Google Tradutor]
+
+/*
+But beware, it's more complicated than you'll assume. 
+
+For example, how might you determine if two function references are "structurally equivalent"? Even stringifying to compare their source code text wouldn't take into account things like closure. 
+
+JS doesn't provide structural equality comparison because it's almost intractable to handle all the corner cases!
+*/
+
+// Comparações Coercitivas (Será mais discutivo mais no capítulo 4 e não é algo opcional a ser evitado. É um dos pilares do JS)
+
+/* 
+    Coerção significa a conversão de
+    um valor com um tipo
+    para sua respectiva representação em outro tipo (na medida do possível). 
+    
+    [Traduzido - troquei 'de' por 'com']
+*/
+
+/*
+"But where coercion meets comparison operators (like equality), confusion and frustration unfortunately crop up more often than not.
+
+Few JS features draw more ire in the broader JS community than the == operator, generally referred to as the "loose equality" operator. The majority of all writing and public discourse on JS condemns this operator as poorly designed and dangerous/bug-ridden when used in JS programs. Even the creator of the language himself, Brendan Eich, has lamented how it was designed as a big mistake.
+
+From what I can tell, most of this frustration comes from a pretty short list of confusing corner cases, 
+
+but a deeper problem is the extremely widespread misconception that it performs its comparisons without considering the types of its compared values."*/
+
+/*
+"The == operator performs an equality comparison similarly to how the === performs it. In fact, both operators consider the type of the values being compared. And if the comparison is between the same value type, both == and === do exactly the same thing, no difference whatsoever."*/
+
+// Ou seja, ambos == e === checam tipos, então se for para comparar tipos, dá na mesma.
+
+//ATENÇÃO AQUI
+/*
+"Se valores comparados forem de tipos diferentes,
+ o operador == difere do operador === por permitir a coerção antes da comparação.
+ Em outras palavras, ambos comparam valores de tipos iguais,
+ mas o operador == permite conversões de tipo primeiro
+ e, uma vez que os tipos tenham sido convertidos para serem iguais em ambos os lados, o operador == faz o mesmo que o operador ===.
+ 
+ Em vez de "igualdade flexível", o operador == deveria ser descrito como "igualdade coercitiva".[Traduzido]*/
+
+    42 == "42";             // true
+    1 == true;              // true
+
+// Em ambos os casos, há, inicialmente, tipos diferentes.
+// Então, o operador == converte ambos para número, para depois fazer a comparação.
+// Ou seja "42" do tipo string vira 42 do tipo number; e true do tipo boolean vira 1 do tipo number.
+
+// O operador == prefere comparações númericas primitivas.
+
+// "Just being aware of this nature of == — that it prefers primitive numeric comparisons — helps you avoid most of the troublesome corner cases, such as staying away from a gotchas like 
+
+    "" == 0     // [ true. Porque converte "" para númerico 0 e depois compara]
+
+// or 
+
+    0 == false  // [ true. Porque converte false para númerico 0 e depois compara]
+
+// "
+
+// FIQUE ATENTO
+// Operadores como <, >, <= e >= usam coerção da mesma forma que ==.
+
+/*
+Consider:*/
+
+    var arr = [ "1", "10", "100", "1000" ];
+    for (let i = 0; i < arr.length && arr[i] < 500; i++) {
+        // will run 3 times
+    }
+
+/*
+The i < arr.length comparison is "safe" from coercion because i and arr.length are always numbers. The arr[i] < 500 invokes coercion, though, because the arr[i] values are all strings. Those comparisons thus become 1 < 500, 10 < 500, 100 < 500, and 1000 < 500. Since that fourth one is false, the loop stops after its third iteration.*/
+
+// These relational operators typically use numeric comparisons, except in the case where both values being compared are already strings; in this case, they use alphabetical (dictionary-like) comparison of the strings:
+
+    var x = "10";
+    var y = "9";
+
+    x < y;      // true, watch out!
+
+// Ou seja, esses operadores preferem comparações numéricas, EXCETO QUANDO AMBOS FOREM STRING, nesses casos será uma COMPARAÇÃO ALFABÉTICA ("a" sendo "menor" que "b"...)
+
+/*"Não há como fazer com que esses operadores relacionais evitem a coerção, a não ser nunca usar tipos incompatíveis nas comparações. Isso talvez seja admirável como objetivo, mas ainda é bem provável que você encontre um caso em que os tipos sejam diferentes.
+
+A abordagem mais sensata não é evitar comparações coercitivas, mas sim aceitá-las e aprender seus detalhes.
+
+Comparações coercitivas aparecem em outros lugares em JavaScript, como em condicionais (if, etc.), que revisitaremos no Apêndice A, 'Comparação Condicional Coercitiva'.[Traduzido via Google Tradutor]*/
+
+/*
+Bem curto, mas no fundo da coisa:
+
+=== (igualdade estrita)
+
+    Testa identidade sem coerção.
+    Primitivos → mesmo tipo e mesmo valor
+    Objetos → mesma referência (mesma instância)
+
+== (igualdade abstrata)
+
+    Testa equivalência após coerção.
+    Ele tenta transformar os operandos até ficarem do mesmo tipo, seguindo regras formais (ToPrimitive, ToNumber, etc.), e só então compara.
+*/
+
+// How We Organize in JS
