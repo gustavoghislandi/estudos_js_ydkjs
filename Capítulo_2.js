@@ -432,3 +432,148 @@ Bem curto, mas no fundo da coisa:
 */
 
 // How We Organize in JS
+
+// Dois padrões principais para organizar código (dados e comportamento) são amplamente usados em JavaScript: classes e módulos.
+
+// Ser proficiente em JS significa compreender quando ambos esses padrões são apropriados (e quando não).
+
+// Classes
+
+//
+
+/*
+A class in a program is a definition of a "type" of custom data structure that includes both data and behaviors that operate on that data.
+Classes define how such a data structure works, but classes are not themselves concrete values. 
+To get a concrete value that you can use in the program, a class must be instantiated (with the new keyword) one or more times.
+*/
+
+    class Page {
+        constructor(text) {
+            this.text = text;
+        }
+
+        print() {
+            console.log(this.text);
+        }
+    }
+
+    class Notebook {
+        constructor() {
+            this.pages = [];
+        }
+
+        addPage(text) {
+            var page = new Page(text);
+            this.pages.push(page);
+        }
+
+        print() {
+            for (let page of this.pages) {
+                page.print();
+            }
+        }
+    }
+
+    var mathNotes = new Notebook();
+    mathNotes.addPage("Arithmetic: + - * / ...");
+    mathNotes.addPage("Trigonometry: sin cos tan ...");
+
+    mathNotes.print();
+
+// "Behavior (methods) can only be called on instances (not the classes themselves), such as mathNotes.addPage(..) and page.print()." [Não se o método for 'static', aí a classe pode usar o método]
+
+// "The same program could have been built without any class definitions, but it would likely have been much less organized, harder to read and reason about, and more susceptible to bugs and subpar maintenance."
+
+// Class Inheritance (Herança de Classes)
+
+// "Another aspect inherent to traditional 'class-oriented' design, though a bit less commonly used in JS, is 'inheritance' (and 'polymorphism'). Consider:"
+
+class Publication {
+    constructor(title,author,pubDate) {
+        this.title = title;
+        this.author = author;
+        this.pubDate = pubDate;
+    }
+
+    print() {
+        console.log(`
+            Title: ${ this.title }
+            By: ${ this.author }
+            ${ this.pubDate }
+        `);
+    }
+}
+
+// "This Publication class defines a set of common behavior that any publication might need."
+
+// "Now let's consider more specific types of publication, like Book and BlogPost:"
+
+class Book extends Publication {
+    constructor(bookDetails) {
+        super(
+            bookDetails.title,
+            bookDetails.author,
+            bookDetails.publishedOn
+        );
+        this.publisher = bookDetails.publisher;
+        this.ISBN = bookDetails.ISBN;
+    }
+
+    print() {
+        super.print();
+        console.log(`
+            Publisher: ${ this.publisher }
+            ISBN: ${ this.ISBN }
+        `);
+    }
+}
+
+class BlogPost extends Publication {
+    constructor(title,author,pubDate,URL) {
+        super(title,author,pubDate);
+        this.URL = URL;
+    }
+
+    print() {
+        super.print();
+        console.log(this.URL);
+    }
+}
+
+// "Both Book and BlogPost use the extends clause to extend the general definition of Publication to include additional behavior. The super(..) call in each constructor delegates to the parent Publication class's constructor for its initialization work, and then they do more specific things according to their respective publication type (aka, 'sub-class' or 'child class')."
+
+// "Now consider using these child classes:"
+
+var YDKJS = new Book({
+    title: "You Don't Know JS",
+    author: "Kyle Simpson",
+    publishedOn: "June 2014",
+    publisher: "O'Reilly",
+    ISBN: "123456-789"
+});
+
+YDKJS.print();
+// Title: You Don't Know JS
+// By: Kyle Simpson
+// June 2014
+// Publisher: O'Reilly
+// ISBN: 123456-789
+
+var forAgainstLet = new BlogPost(
+    "For and against let",
+    "Kyle Simpson",
+    "October 27, 2014",
+    "https://davidwalsh.name/for-and-against-let"
+);
+
+forAgainstLet.print();
+// Title: For and against let
+// By: Kyle Simpson
+// October 27, 2014
+// https://davidwalsh.name/for-and-against-let
+
+// "Notice that both child class instances have a print() method, which was an override of the inherited print() method from the parent Publication class. Each of those overridden child class print() methods call super.print() to invoke the inherited version of the print() method."
+
+// "The fact that both the inherited and overridden methods can have the same name and co-exist is called POLYMORPHISM."
+
+// "Inheritance is a powerful tool for organizing data/behavior in separate logical units (classes), but allowing the child class to cooperate with the parent by accessing/using its behavior and data."
