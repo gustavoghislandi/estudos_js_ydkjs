@@ -439,8 +439,6 @@ Bem curto, mas no fundo da coisa:
 
 // Classes
 
-//
-
 /*
 A class in a program is a definition of a "type" of custom data structure that includes both data and behaviors that operate on that data.
 Classes define how such a data structure works, but classes are not themselves concrete values. 
@@ -577,3 +575,328 @@ forAgainstLet.print();
 // "The fact that both the inherited and overridden methods can have the same name and co-exist is called POLYMORPHISM."
 
 // "Inheritance is a powerful tool for organizing data/behavior in separate logical units (classes), but allowing the child class to cooperate with the parent by accessing/using its behavior and data."
+
+// Módulos
+
+// "The module pattern has essentially the same goal as the class pattern, which is to group data and behavior together into logical units. Also like classes, modules can "include" or "access" the data and behaviors of other modules, for cooperation sake."
+
+// "But modules have some important differences from classes. Most notably, the syntax is entirely different."
+
+// Classic Modules
+
+// "ES6 added a module syntax form to native JS syntax, which we'll look at in a moment. But from the early days of JS, modules was an important and common pattern that was leveraged in countless JS programs, even without a dedicated syntax."
+
+// "The key hallmarks of a classic module are an outer function (that runs at least once), which returns an 'instance' of the module with one or more functions exposed that can operate on the module instance's internal (hidden) data."
+
+// "Because a module of this form is just a function, and calling it produces an 'instance' of the module, another description for these functions is 'MODULE FACTORIES'."
+
+// "Consider the classic module form of the earlier Publication, Book, and BlogPost classes:"
+
+    function Publication(title, author, pubDate) {
+        var publicAPI = {
+            print() {
+                console.log(`
+                    Title: ${title}
+                    By: ${author}
+                    ${pubDate}
+                `);
+            }
+        };
+
+        return publicAPI;
+    }
+
+    function Book(bookDetails) {
+        var pub = Publication(
+            bookDetails.title,
+            bookDetails.author,
+            bookDetails.publishedOn
+        );
+
+        var publicAPI = {
+            print() {
+                pub.print();
+                console.log(`
+                    Publisher: ${bookDetails.publisher}
+                    ISBN: ${bookDetails.ISBN}
+                `);
+            }
+        };
+
+        return publicAPI;
+    }
+
+    function BlogPost(title, author, pubDate, URL) {
+        var pub = Publication(title, author, pubDate);
+
+        var publicAPI = {
+            print() {
+                pub.print();
+                console.log(URL);
+            }
+        };
+
+        return publicAPI;
+    }
+
+// "Comparing these forms to the class forms, there are more similarities than differences."
+
+/* A forma de classe armazena métodos e dados em uma instância de objeto, que deve ser acessada com o prefixo 'this.'. 
+Com módulos, os métodos e dados são acessados ​​como variáveis ​​identificadoras no escopo, sem nenhum prefixo 'this.'.
+
+Com classes, a "API" de uma instância é implícita na definição da classe — além disso, todos os dados e métodos são públicos. Com a função de fábrica do módulo, você cria e retorna explicitamente um objeto com quaisquer métodos expostos publicamente, e quaisquer dados ou outros métodos não referenciados permanecem privados dentro da função de fábrica.
+
+[Traduzido via Google Tradutor] */
+
+// Em outras palavras:
+
+// Com classes, tudo que você define com 'this' é público. Para criar algo privado, precisa de truques (como #privateField ou closures).
+
+// Com factory modules, qualquer variável ou função dentro da função que não for retornada fica automaticamente privada, acessível apenas pelos métodos expostos.
+
+// Um exemplo com os campos privados em cada caso:
+
+// --- Classe com private ---
+class SecretClass {
+    #privateCount = 0;    // campo privado nativo
+    publicCount = 0;      // público
+
+    increment() {
+        this.publicCount++;
+        this.#privateCount++;      // usamos o privado aqui
+        console.log(
+            `public: ${this.publicCount}, private: ${this.#privateCount}`
+        );
+    }
+}
+
+const sc = new SecretClass();
+sc.increment(); // public: 1, private: 1
+sc.increment(); // public: 2, private: 2
+// console.log(sc.#privateCount); // ❌ erro, não acessível fora
+
+// --- Factory Module ---
+function SecretModule() {
+    let privateCount = 0;   // privado
+    let publicCount = 0;    // só porque retornamos, vira público
+    return {
+        increment() {
+            publicCount++;
+            privateCount++;    // usamos o privado aqui
+            console.log(
+                `public: ${publicCount}, private: ${privateCount}`
+            );
+        }
+    };
+}
+
+const sm = SecretModule();
+sm.increment(); // public: 1, private: 1
+sm.increment(); // public: 2, private: 2
+// console.log(sm.privateCount); // undefined → privado
+
+
+// Resumo da diferença no privado:
+
+    // Classe: precisa de # ou closures para privado; campos 'this'. são públicos.
+
+    // Factory: qualquer variável não retornada fica privada automaticamente.
+
+//------- feito com ChatGPT
+
+// Aqui não vai focar em explicar sobre as propriedades privadas, mas sobre a questão de ser objeto que chama o método e precisar ou não de 'this'.
+
+// Vamos resumir isso com um mini-comparativo:
+
+// --- Classe ---
+class CounterClass {
+    constructor() {
+        this.count = 0;       // "this" guarda o estado na instância
+    }
+    increment() {
+        this.count++;          // "this" acessa o estado
+        console.log(this.count);
+    }
+}
+
+const c1 = new CounterClass();
+c1.increment(); // 1
+c1.increment(); // 2
+
+// --- Módulo ---
+function CounterModule() {
+    let count = 0;            // variável no escopo do módulo
+    return {
+        increment() {
+            count++;           // acessa a variável diretamente
+            console.log(count);
+        }
+    };
+}
+
+const m1 = CounterModule();
+m1.increment(); // 1
+m1.increment(); // 2
+
+
+// ✅ Diferença chave:
+
+// Classe → this.count → precisa da instância (new) para guardar estado.
+
+// Módulo → count → variável fechada no escopo do módulo (closure), não usa this.
+
+    // Ah, porque o this é o objeto. Ele que usa o método. É isso? Já no factorie module não existe objeto, então é uma variável(método que vai encadear outro). É isso?
+
+        // “O this é o objeto. Ele que usa o método.” → Sim.
+
+            // Em classes, cada instância é um objeto e this aponta para ele, permitindo acessar/alterar o estado.
+
+        // “Já no factory module não existe objeto, então é uma variável (método que vai encadear outro).” → Quase certo.
+
+            // O factory retorna um objeto literal com métodos, mas o estado real fica em variáveis fechadas na closure, não em this.
+
+        // Demonstração do literal do factory:
+
+            const m1 = CounterModule();
+            console.log(m1);
+
+            /* Saída (literal do objeto retornado):
+            {
+                increment: function() { ... }   // só o método exposto
+            }
+            */
+
+        // ✅ Resumo  diferença:
+
+            // Classe → this.count → estado dentro do objeto/instância.
+            // Factory → let count → estado fechado na closure, objeto só expõe métodos.
+
+//------- fim do feito com ChatGPT
+
+/* "There are other variations to this factory function form that are quite common across JS, even in 2020; you may run across these forms in different JS programs: AMD (Asynchronous Module Definition), UMD (Universal Module Definition), and CommonJS (classic Node.js-style modules). The variations are minor (not quite compatible). However, all of these forms rely on the same basic principles.
+
+Consider also the usage (aka, "instantiation") of these module factory functions:"
+*/
+
+var YDKJS = Book({
+    title: "You Don't Know JS",
+    author: "Kyle Simpson",
+    publishedOn: "June 2014",
+    publisher: "O'Reilly",
+    ISBN: "123456-789"
+});
+
+YDKJS.print();
+// Title: You Don't Know JS
+// By: Kyle Simpson
+// June 2014
+// Publisher: O'Reilly
+// ISBN: 123456-789
+
+var forAgainstLet = BlogPost(
+    "For and against let",
+    "Kyle Simpson",
+    "October 27, 2014",
+    "https://davidwalsh.name/for-and-against-let"
+);
+
+forAgainstLet.print();
+// Title: For and against let
+// By: Kyle Simpson
+// October 27, 2014
+// https://davidwalsh.name/for-and-against-let
+
+/* "The only observable difference here is the lack of using new, calling the module factories as normal functions."*/
+
+// ES Modules (ESM - ECMAScript Modules)
+
+/* "Primeiro, não existe uma função de encapsulamento para definir um módulo. O contexto de encapsulamento é um arquivo. Os ESMs são sempre baseados em arquivos; um arquivo, um módulo.
+
+Segundo, você não interage explicitamente com a 'API' de um módulo, mas sim usa a palavra-chave 'export' para adicionar uma variável ou método à sua definição de API pública. Se algo for definido em um módulo, mas não exportado, permanecerá oculto (assim como nos módulos clássicos).
+
+Terceiro, e talvez a diferença mais notável em relação aos padrões discutidos anteriormente, você não 'instancia' um módulo ES, você apenas o importa para usar sua única instância.
+
+Os ESMs são, na prática, 'singletons', pois existe apenas uma instância criada na primeira importação em seu programa, e todas as outras importações recebem apenas uma referência a essa mesma instância.
+
+Se o seu módulo precisar suportar múltiplas instanciações, você terá que fornecer uma função de fábrica no estilo clássico de módulos em sua definição de ESM para essa finalidade.
+
+" [Traduzido via Google Tradutor]
+*/
+
+// Perceba que:
+
+// "existe apenas uma instância criada na primeira importação em seu programa"
+
+// Ou seja
+
+    // A instância surge com o 'import'.
+
+    // O módulo só é executado uma vez, na primeira importação; o 'export' apenas disponibiliza referências aos valores já criados.
+
+    // O 'export' não cria instância, só compartilha a que foi criada quando o módulo rodou na primeira importação.
+
+// "In our running example, we do assume multiple-instantiation, so these following snippets will mix both ESM and classic modules."
+
+// "Consider the file publication.js:"
+
+    function printDetails(title, author, pubDate) {
+        console.log(`
+            Title: ${title}
+            By: ${author}
+            ${pubDate}
+        `);
+    }
+
+    export function create(title, author, pubDate) {
+        var publicAPI = { // objeto com métodos
+            print() { // método do objeto
+                printDetails(title, author, pubDate); // usa os dados "privados" da função create
+            }
+        };
+
+        return publicAPI; // retorna o objeto com os métodos que podem ser chamados externamente (tornando-o, portanto, público)
+        // ex.: let pub = create(...); pub.print();
+}
+
+// "To import and use this module, from another ES module like blogpost.js:"
+
+    import { create as createPub } from "publication.js";
+
+    function printDetails(pub, URL) {
+        pub.print();
+        console.log(URL);
+    }
+
+    export function create(title, author, pubDate, URL) {
+        var pub = createPub(title, author, pubDate);
+
+        var publicAPI = {
+            print() {
+                printDetails(pub, URL);
+            }
+        };
+
+        return publicAPI;
+    }
+
+// "And finally, to use this module, we import into another ES module like main.js:"
+
+    import { create as newBlogPost } from "blogpost.js";
+
+    var forAgainstLet = newBlogPost(
+        "For and against let",
+        "Kyle Simpson",
+        "October 27, 2014",
+        "https://davidwalsh.name/for-and-against-let"
+    );
+
+    forAgainstLet.print();
+    // Title: For and against let
+    // By: Kyle Simpson
+    // October 27, 2014
+    // https://davidwalsh.name/for-and-against-let
+
+
+// Se você precisa de várias instâncias de um módulo, use uma factory (função create) ou um módulo clássico interno.
+
+// Se só precisa de uma instância única, pode exportar os métodos diretamente do ES module, sem criar factories ou classes.
