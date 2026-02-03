@@ -91,3 +91,10 @@ Consider:
 
 // "[...] an iterator is just an iterable of itself! When creating an iterator instance from an existing iterator, the iterator itself is returned."
 
+// Closure
+
+// "We need to be able to recognize where closure is used in programs, as the presence or lack of closure is sometimes the cause of bugs (or even the cause of performance issues)."
+
+/* "So let's define closure in a pragmatic and concrete way:
+
+     Closure is when a function remembers and continues to access variables from outside its scope, even when the function is executed in a different scope."*/
