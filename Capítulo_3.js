@@ -304,3 +304,30 @@ If you're still feeling unclear or shaky about closure, the majority of Book 2, 
 // Uma função que fecha um escopo nunca pode referenciar um escopo ou conjunto de variáveis ​​diferente.
 
 // Mas uma função que reconhece o contexto dinâmico 'this' pode ser bastante útil para certas tarefas.
+
+// Prototypes
+
+// Enquanto isso é uma característica da execução de uma função, um protótipo é uma característica de um objeto, e especificamente da resolução do acesso a uma propriedade. [Traduzido via Google Tradutor]
+
+// Think about a prototype as a linkage between two objects; the linkage is hidden behind the scenes, though there are ways to expose and observe it. This prototype linkage occurs when an object is created; it's linked to another object that already exists. [Muito bom]
+
+// A series of objects linked together via prototypes is called the "prototype chain."
+
+// The purpose of this prototype linkage (i.e., from an object B to another object A) is so that accesses against B for properties/methods that B does not have, are delegated to A to handle. [Efeito bem semelhate a herança por classes]
+
+// Delegation of property/method access allows two (or more!) objects to cooperate with each other to perform a task.
+
+// Consider defining an object as a normal literal:
+
+    var homework = {
+        topic: "JS"
+    };
+
+// The homework object only has a single property on it: topic. However, its default prototype linkage connects to the 'Object.prototype' object, which has common built-in methods on it like 'toString()' and 'valueOf()', among others.
+
+// We can observe this prototype linkage delegation from homework to Object.prototype:
+
+    homework.toString();    // [object Object]
+
+// homework.toString() works even though homework doesn't have a toString() method defined; the delegation invokes Object.prototype.toString() instead.
+
