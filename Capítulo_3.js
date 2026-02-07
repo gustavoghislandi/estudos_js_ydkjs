@@ -331,3 +331,67 @@ If you're still feeling unclear or shaky about closure, the majority of Book 2, 
 
 // homework.toString() works even though homework doesn't have a toString() method defined; the delegation invokes Object.prototype.toString() instead.
 
+// Object Linkage
+
+// "To define an object prototype linkage, you can create the object using the Object.create(..) utility:
+
+    var homework = {
+        topic: "JS"
+    };
+
+    var otherHomework = Object.create(homework);
+
+    otherHomework.topic;   // "JS"
+
+// The first argument to Object.create(..) specifies an object to link the newly created object to, and then returns the newly created (and linked!) object."
+
+
+// Se você criar no objeto uma propriedade de nome igual a uma propriedade que esteja no protótipo, ela sofrerá algo parecido com um override. Ou seja, vale a propriedade do objeto acima da do protótipo. Porém, o nome dado a esse comportamento é shadowing.
+
+    homework.topic;
+    // "JS"
+
+    otherHomework.topic;
+    // "JS"
+
+    otherHomework.topic = "Math";
+    otherHomework.topic;
+    // "Math"
+
+    homework.topic;
+    // "JS" -- not "Math"
+
+// É mais correto pensar em shadowing (sombreamento), não override.
+
+// "The topic on otherHomework is 'shadowing' the property of the same name on the homework object in the chain."
+
+
+// Em JS, quando você acessa uma propriedade:
+
+    otherHomework.topic
+
+    // O motor faz isso:
+
+        // Procura topic no próprio objeto (otherHomework)
+        // Se não achar, sobe na cadeia de protótipos
+        // Para na primeira ocorrência
+
+// Por que NÃO é override?
+
+//     Override implica:
+
+//         Substituir comportamento herdado
+//         Normalmente envolve classes
+//         Geralmente afeta chamadas polimórficas
+
+//     Em JS com protótipos:
+
+//         Você não substitui
+//         Você oculta
+//         O lookup apenas para antes de chegar no protótipo
+
+// "NOTE:
+// Another frankly more convoluted but perhaps still more common way of creating an object with a prototype linkage is using the "prototypal class" pattern, from before class (see Chapter 2, "Classes") was added in ES6. We'll cover this topic in more detail in Appendix A, "Prototypal 'Classes'"."
+
+// 'this' Revisited
+
