@@ -395,3 +395,63 @@ If you're still feeling unclear or shaky about closure, the majority of Book 2, 
 
 // 'this' Revisited
 
+// "We covered the this keyword earlier, but its true importance shines when considering how it powers prototype-delegated function calls. Indeed, one of the main reasons this supports dynamic context based on how the function is called is so that method calls on objects which delegate through the prototype chain still maintain the expected this."
+
+// "Consider:
+
+    var homework = {
+        study() {
+            console.log(`Please study ${this.topic}`);
+        }
+    };
+
+    var jsHomework = Object.create(homework);
+    jsHomework.topic = "JS";
+    jsHomework.study();
+    // Please study JS
+
+    var mathHomework = Object.create(homework);
+    mathHomework.topic = "Math";
+    mathHomework.study();
+    // Please study Math
+
+// "The two objects jsHomework and mathHomework each prototype link to the single homework object, which has the study() function. jsHomework and mathHomework are each given their own topic propert
+
+// jsHomework.study() delegates to homework.study(), but its this (this.topic) for that execution resolves to jsHomework because of how the function is called, so this.topic is "JS". Similarly for mathHomework.study() delegating to homework.study() but still resolving this to mathHomework, and thus this.topic as "Math".
+
+// The preceding code snippet would be far less useful if this was resolved to homework. 
+
+// Unlike many other languages, JS's this being dynamic is a critical component of allowing prototype delegation, and indeed class, to work as expected!
+
+// Em Java / C#:
+
+    // Método é parte da classe
+    // this é ligado à instância no momento da chamada
+    // Você não separa facilmente método e objeto
+
+// Em JavaScript:
+
+    // Funções são independentes
+    // Objetos delegam comportamento via prototype
+    // this é decidido puramente pela forma da chamada
+
+    jsHomework.study();
+
+    // Aqui, o JS faz algo como:
+
+        // “Quem está à esquerda do ponto? Então esse é o this.”
+
+        // Mesmo que a função esteja em outro objeto no prototype chain.
+
+// Em linguagens OO clássicas, mesmo que o método seja definido na classe base, o this sempre aponta para a instância concreta em runtime, não para a classe/base onde o método foi escrito.
+
+// Resumão mental 🧠
+
+//     ❌ Java não faria this.topic virar o topic da classe base
+//     ✅ Java também resolve this dinamicamente para a instância real
+//     🔥 JS vai além: permite reutilizar funções entre objetos sem relação de classe, graças ao this dinâmico + prototype
+
+//---------------
+// "As you are getting started learning and knowing JS more closely, one of the most important skills you can practice and bolster is curiosity, and the art of asking "Why?" when you encounter something in the language.
+
+// Even though this chapter has gone quite deep on some of the topics, many details have still been entirely skimmed over. There's much more to learn here, and the path to that starts with you asking the right questions of your code. Asking the right questions is a critical skill of becoming a better developer."
