@@ -7,39 +7,28 @@
 const dayStart = "07:30";
 const dayEnd = "17:45";
 
+
+function stringTimeToMinutes(time){
+let timeHours = time.slice(0,2).replace(":","")
+// console.log(`Hora do time: ${timeHours}`)
+let timeMinutesHour = timeHours * 60
+// console.log(`Hora do time em minutos: ${timeMinutesHour}`)
+let timeMinutes = Number(time.slice(-2))
+// console.log(`Minutos do time: ${timeMinutes}`)
+let timeInMinutes = timeMinutesHour + timeMinutes
+// console.log(`dayStart em minutos: ${dayStartInMinutes}`)
+return timeInMinutes
+}
+
 function scheduleMeeting(startTime,durationMinutes) {
-    let hour = startTime.slice(0,2).replace(":","")
-    let minutesHour = hour * 60
-    // console.log(`hora:${hour}`)
-    // console.log(`Hora em minutos: ${minutesHour}`) // number
 
-    let minutes = startTime.slice(-2)
-    // console.log(`Minutos(string):${minutes}`) // string
+    startTimeInMinutes = stringTimeToMinutes(startTime)
+    let endTimeInMinutes = startTimeInMinutes + durationMinutes
 
-    startTime = minutesHour + Number(minutes) // Transformando startTime em minutos (number)
-    // console.log(`startTime em minutos: ${startTime}`) // number. Sem conversão seria string.
-    let endTime = startTime + durationMinutes
-    // console.log(endTime)
+    dayStartInMinutes = stringTimeToMinutes(dayStart)
+    dayEndInMinutes = stringTimeToMinutes(dayEnd)
 
-    let dayStartHours = dayStart.slice(0,2).replace(":","")
-    // console.log(`Hora do dayStart: ${dayStartHours}`)
-    let dayStartMinutesHour = dayStartHours * 60
-    // console.log(`Hora do dayStart em minutos: ${dayStartMinutesHour}`)
-    let dayStartMinutes = Number(dayStart.slice(-2))
-    // console.log(`Minutos do dayStart: ${dayStartMinutes}`)
-    let dayStartInMinutes = dayStartMinutesHour + dayStartMinutes
-    // console.log(`dayStart em minutos: ${dayStartInMinutes}`)
-
-    let dayEndHours = dayEnd.slice(0,2).replace(":","")
-    // console.log(`Hora do dayEnd: ${dayEndHours}`)
-    let dayEndMinutesHour = dayEndHours * 60
-    // console.log(`Hora do dayEnd em minutos: ${dayEndMinutesHour}`)
-    let dayEndMinutes = Number(dayEnd.slice(-2))
-    // console.log(`Minutos do dayEnd: ${dayEndMinutes}`)
-    let dayEndInMinutes = dayEndMinutesHour + dayEndMinutes
-    // console.log(`dayEnd em minutos: ${dayEndInMinutes}`)
-
-    if ((startTime < dayStartInMinutes) || (endTime > dayEndInMinutes)){
+    if ((startTimeInMinutes < dayStartInMinutes) || (endTimeInMinutes > dayEndInMinutes)){
         return false
     }
     return true
