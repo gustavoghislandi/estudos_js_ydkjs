@@ -9,15 +9,11 @@ const dayEnd = "17:45";
 
 
 function stringTimeToMinutes(time){
-let timeHours = time.slice(0,2).replace(":","")
-// console.log(`Hora do time: ${timeHours}`)
-let timeMinutesHour = timeHours * 60
-// console.log(`Hora do time em minutos: ${timeMinutesHour}`)
-let timeMinutes = Number(time.slice(-2))
-// console.log(`Minutos do time: ${timeMinutes}`)
-let timeInMinutes = timeMinutesHour + timeMinutes
-// console.log(`dayStart em minutos: ${dayStartInMinutes}`)
-return timeInMinutes
+    let timeHours = time.slice(0,2).replace(":","")
+    let timeMinutesHour = timeHours * 60
+    let timeMinutes = Number(time.slice(-2))
+    let timeInMinutes = timeMinutesHour + timeMinutes
+    return timeInMinutes
 }
 
 function scheduleMeeting(startTime,durationMinutes) {
