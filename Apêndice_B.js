@@ -21,7 +21,25 @@ function scheduleMeeting(startTime,durationMinutes) {
     let endTime = startTime + durationMinutes
     // console.log(endTime)
 
-    if ((startTime < 450) || (endTime > 1065)){
+    let dayStartHours = dayStart.slice(0,2).replace(":","")
+    // console.log(`Hora do dayStart: ${dayStartHours}`)
+    let dayStartMinutesHour = dayStartHours * 60
+    // console.log(`Hora do dayStart em minutos: ${dayStartMinutesHour}`)
+    let dayStartMinutes = Number(dayStart.slice(-2))
+    // console.log(`Minutos do dayStart: ${dayStartMinutes}`)
+    let dayStartInMinutes = dayStartMinutesHour + dayStartMinutes
+    // console.log(`dayStart em minutos: ${dayStartInMinutes}`)
+
+    let dayEndHours = dayEnd.slice(0,2).replace(":","")
+    // console.log(`Hora do dayEnd: ${dayEndHours}`)
+    let dayEndMinutesHour = dayEndHours * 60
+    // console.log(`Hora do dayEnd em minutos: ${dayEndMinutesHour}`)
+    let dayEndMinutes = Number(dayEnd.slice(-2))
+    // console.log(`Minutos do dayEnd: ${dayEndMinutes}`)
+    let dayEndInMinutes = dayEndMinutesHour + dayEndMinutes
+    // console.log(`dayEnd em minutos: ${dayEndInMinutes}`)
+
+    if ((startTime < dayStartInMinutes) || (endTime > dayEndInMinutes)){
         return false
     }
     return true
